@@ -11,8 +11,8 @@ class MemoModel {
     required this.title,
     required this.memo,
     DateTime? createdAt,
-  })  : id = Uuid().v4(),
-        createdAt = DateTime.now();
+  })  : id = id ?? Uuid().v4(),
+        createdAt = createdAt ?? DateTime.now();
 
   factory MemoModel.fromJson(Map<String, dynamic> json) {
     return MemoModel(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_memo_app/memo_list_controller.dart';
+import 'package:flutter_memo_app/memo_model.dart';
 import 'package:flutter_memo_app/memo_write_controller.dart';
 import 'package:flutter_memo_app/memo_write_page.dart';
 import 'package:get/get.dart';
@@ -35,13 +37,13 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget _monthlyMemoGroup() {
+  Widget _monthlyMemoGroup(String monthString, List<MemoModel> memoList) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 30),
         Text(
-          '8월',
+          '$monthString월',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         SizedBox(height: 10),
@@ -54,7 +56,7 @@ class Home extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: List.generate(
-              5,
+              memoList.length,
               (i) {
                 return Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -69,14 +71,14 @@ class Home extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        '안녕하세요 개발하는남자 개남입니다.',
+                        memoList[i].title,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
                         ),
                       ),
                       Text(
-                        '메모만들기 프로젝트 생성해보겠습니다.',
+                        memoList[i].memo,
                         style:
                             TextStyle(fontSize: 14, color: Color(0xff848484)),
                       ),
@@ -109,7 +111,19 @@ class Home extends StatelessWidget {
                 ),
               ),
               _searchBar(),
-              _monthlyMemoGroup()
+              GetBuilder<MemoListController>(builder: (controller) {
+                List<String> keys = [];
+                List<List<MemoModel>> values = [];
+                controller.memoGroup.forEach((key, value) {
+                  keys.add(key);
+                  values.add(value);
+                });
+                return Column(
+                  children: List.generate(keys.length, (i) {
+                    return _monthlyMemoGroup(keys[i], values[i]);
+                  }),
+                );
+              }),
             ],
           ),
         ),
