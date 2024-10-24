@@ -22,6 +22,8 @@ class Home extends StatelessWidget {
           SizedBox(width: 10),
           Expanded(
             child: TextField(
+              controller:
+                  Get.find<MemoListController>().searchKeywordController,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: '검색',
@@ -30,6 +32,18 @@ class Home extends StatelessWidget {
                   fontSize: 15,
                 ),
               ),
+              onChanged: (value) {
+                Get.find<MemoListController>().search(value);
+              },
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Get.find<MemoListController>().clearSearchKeyword();
+            },
+            child: Icon(
+              Icons.close,
+              color: Color(0xff888888),
             ),
           ),
         ],
@@ -108,34 +122,40 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffEBEBEB),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                '메모',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus(); // 추가
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '메모',
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              _searchBar(),
-              GetBuilder<MemoListController>(builder: (controller) {
-                List<String> keys = [];
-                List<List<MemoModel>> values = [];
-                controller.memoGroup.forEach((key, value) {
-                  keys.add(key);
-                  values.add(value);
-                });
-                return Column(
-                  children: List.generate(keys.length, (i) {
-                    return _monthlyMemoGroup(keys[i], values[i]);
-                  }),
-                );
-              }),
-            ],
+                _searchBar(),
+                GetBuilder<MemoListController>(builder: (controller) {
+                  List<String> keys = [];
+                  List<List<MemoModel>> values = [];
+                  controller.memoGroup.forEach((key, value) {
+                    keys.add(key);
+                    values.add(value);
+                  });
+                  return Column(
+                    children: List.generate(keys.length, (i) {
+                      return _monthlyMemoGroup(keys[i], values[i]);
+                    }),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
       ),
