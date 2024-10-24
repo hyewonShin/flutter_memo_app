@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_memo_app/memo_write_controller.dart';
 import 'package:flutter_memo_app/memo_write_page.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -116,7 +116,9 @@ class Home extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(MemoWritePage());
+          Get.to(MemoWritePage(), binding: BindingsBuilder(() {
+            Get.put(MemoWriteController());
+          }));
         },
         backgroundColor: Color(0xffF7C354),
         shape: RoundedRectangleBorder(

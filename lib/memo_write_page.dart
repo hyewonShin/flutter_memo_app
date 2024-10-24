@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_memo_app/data_utils.dart';
+import 'package:flutter_memo_app/memo_write_controller.dart';
 import 'package:get/get.dart';
 
 class MemoWritePage extends StatelessWidget {
@@ -20,7 +22,9 @@ class MemoWritePage extends StatelessWidget {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Get.find<MemoWriteController>().save();
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Text(
@@ -47,10 +51,14 @@ class MemoWritePage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 letterSpacing: -1,
               ),
-              maxLines: null, // 여러 줄 입력 가능
+              maxLines: null,
+              onChanged: (value) {
+                Get.find<MemoWriteController>().setTitle(value);
+              }, // 여러 줄 입력 가능
             ),
             Text(
-              '2024.08.10',
+              MemoDataUtils.formatDate(
+                  'yyyy-MM-dd', Get.find<MemoWriteController>().memoDate!),
               style: TextStyle(fontSize: 13, color: Color(0xffE3AC34)),
             ),
             Expanded(
@@ -66,6 +74,9 @@ class MemoWritePage extends StatelessWidget {
                   letterSpacing: -1,
                 ),
                 maxLines: null, // 여러 줄 입력 가능
+                onChanged: (value) {
+                  Get.find<MemoWriteController>().setMemo(value);
+                },
               ),
             ),
           ],
