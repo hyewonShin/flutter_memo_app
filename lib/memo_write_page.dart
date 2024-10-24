@@ -6,6 +6,36 @@ import 'package:get/get.dart';
 class MemoWritePage extends StatelessWidget {
   const MemoWritePage({super.key});
 
+  void _showDeleteConfirmDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('메모 삭제'),
+          content: Text('메모를 삭제하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.back();
+                Get.find<MemoWriteController>().delete();
+              },
+              child: Text(
+                '삭제',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +71,7 @@ class MemoWritePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
+              controller: Get.find<MemoWriteController>().titleTextController,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: '제목을 입력해주세요.',
@@ -63,6 +94,7 @@ class MemoWritePage extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                controller: Get.find<MemoWriteController>().memoTextController,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: '내용을 입력해주세요.',
@@ -80,6 +112,27 @@ class MemoWritePage extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(15),
+        child: GestureDetector(
+          onTap: () {
+            _showDeleteConfirmDialog(context);
+          },
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Color(0xffF81717),
+            ),
+            child: Center(
+              child: Text(
+                '삭제',
+                style: TextStyle(fontSize: 17, color: Colors.white),
+              ),
+            ),
+          ),
         ),
       ),
     );
